@@ -13,17 +13,17 @@ import numpy as np
 from numpy import nan as Nan
 import math
 
-def request_api_video(tconst):
-    url = f"https://api.themoviedb.org/3/movie/{tconst}?api_key=13ccd20d13e4468bc058a421a4c8987c&language=en-US"
+# def request_api_video(tconst):
+#     url = f"https://api.themoviedb.org/3/movie/{tconst}?api_key=13ccd20d13e4468bc058a421a4c8987c&language=en-US"
   
-    r = requests.get(url)
-    config = r.json()    
-    prefix = "https://www.youtube.com/watch?v="
-    try:
-        trailer = prefix + config['key']
-    except:
-        trailer = "/Users/utilisateur/Documents/streamlit/no_image.png"
-    return trailer
+#     r = requests.get(url)
+#     config = r.json()    
+#     prefix = "https://www.youtube.com/watch?v="
+#     try:
+#         trailer = prefix + config['key']
+#     except:
+#         trailer = "/Users/utilisateur/Documents/streamlit/no_image.png"
+#     return trailer
 
 ### Importation de la base de données ###
 films = pd.read_csv("https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv")
@@ -501,7 +501,7 @@ def filmsacteur(titredufilm_annee):
 def filmsproches(titredufilm_annee):
     df_creustorza = pd.DataFrame()
 
-    dfbasique = filmsprochesbasique(titredufilm_annee)
+    dfbasique = filmsprochesbasique(titredufilm_annee).head(3)
 #     liste1=listealeatoire()
 #     dfbasiquealeatoire = pd.DataFrame()
 #     dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[0]])
@@ -512,7 +512,7 @@ def filmsproches(titredufilm_annee):
     dfnanards = filmsprochesnanards(titredufilm_annee).head(3)
     df_creustorza = pd.concat([df_creustorza,dfnanards], ignore_index=True)
 
-    dfbonsfilms = bonsfilmsproches(titredufilm_annee)
+    dfbonsfilms = bonsfilmsproches(titredufilm_annee).head(3)
 #     liste2=listealeatoire()
 #     dfbonsfilmsaleatoire = pd.DataFrame()
 #     dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[0]])
@@ -574,7 +574,7 @@ if titredufilm_annee:
     result_film["tconst"] = result_film["title_year"].apply(tconst_from_film)
     name_film = result_film["title_year"].to_list()
     url_img = result_film["tconst"].apply(request_api).to_list()
-    url_video = result_film["tconst"].apply(request_api_video).to_list()
+#     url_video = result_film["tconst"].apply(request_api_video).to_list()
     acteur = nomacteur(titredufilm_annee)
     real =  nomreal(titredufilm_annee)
     col1, col2, col3 = st.columns(3)

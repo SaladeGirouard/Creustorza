@@ -24,7 +24,7 @@ st.set_page_config(
          'Report a bug': None,
          'About': "# Bienvenue ! # \n"
          "Anna Munos, Robin Sainsot, Manoa Brugger, Stéphane Provost et Charles Girouard, étudiant.es à la Wild Code School de Nantes vous propose un moteur de recommendation de film d'un nouveau genre ! Tout droit inspiré du mythique Katorza à Nantes et de ses mythques absurdes séances, l'algorithme vous recommanderas des films similaires à votre film favoris décliné sous différentes catégories: version nanard, recent, connus..."
-         "Nous vous laissons découvrir tout cela ! \n")
+         "Nous vous laissons découvrir tout cela ! \n"}
 
 ### Importation de la base de données ###
 films = pd.read_csv("https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv")

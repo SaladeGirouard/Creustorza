@@ -27,18 +27,22 @@ def request_api_video(tconst):
         trailer = "/Users/utilisateur/Documents/streamlit/no_image.png"
     return trailer
 
-
+### Importation de la base de données ###
 films = pd.read_csv("https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv")
 
+
+### Le visuel avec le logo et les rideaux ###
 col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""<img class='test' src="https://i.goopics.net/i7av9t.png" alt="Image">""",unsafe_allow_html=True)
 with col2:
-    st.image('/Users/utilisateur/Documents/streamlit/Logo creustorza.png')
+    st.image('logo_creustorza.png')
     titredufilm_annee = st.multiselect('', films["title_year"])
 with col3:
     st.markdown("""<img src="https://i.goopics.net/lr3ws6.png" alt="Image">""",unsafe_allow_html=True)
 
+    
+    
 def tconst_from_film(film_name):
     try: 
         tc = films.loc[films["title_year"] == film_name]["tconst"].values[0]
@@ -56,64 +60,13 @@ def request_api(tconst):
     try:
         img = prefix + config['backdrop_path']
     except:
-        img = "/Users/utilisateur/Documents/streamlit/no_image.png"
+        img = "pas_dimage.png"
     return img
 
 
-def filmsprochesanciens(titredufilm_annee):
-    # On met le titre du film en minuscules :
-    filmsanciens = films.loc[films["startYear"]<1980]
-    titredufilm_annee = ' '.join(titredufilm_annee)
-    #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
-
-    filmsanciens2 = pd.concat([filmsanciens,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
-    filmsanciens2.drop_duplicates(subset=["title_year"], inplace=True)
-
-    filmsanciens2.reset_index(inplace=True)
-
-        # On créé la variable X qui contient les critères sur lesquels nous faisons
-        # notre recherche.
-    X = filmsanciens2[['averageRating',
-              'Action', 'Adult', 'Adventure', 'Animation', 'Biography', 'Comedy',
-              'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir',
-              'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 'Romance',
-              'Sci-Fi', 'Short', 'Sport', 'Thriller', 'War', 'Western', 'numVoteslog']]
-
-
-    scaler = StandardScaler().fit(X)
-    X_scaled = scaler.transform(X)
-
-        # On entraîne notre modèle, sur une base de "NearestNeighbors", pour avoir 15
-        # résultats, et on met un poids plus important sur la "distance"
-    distanceKNN = NearestNeighbors(n_neighbors=15).fit(X_scaled)
-
-        # On entre le nom du film recherché (titredufilm) dans notre modèle entraîné.
-        # Le résultat, appelé "tuplevoisin", est un tuple de deux éléments : deux 
-        # array numpys, dont le second contient les index des films-résultats de la
-        # requête
-    tuplevoisin = distanceKNN.kneighbors(scaler.transform(filmsanciens2.loc[filmsanciens2['title_year'] == titredufilm_annee,
-                                                                        ['averageRating',
-                                                                        'Action', 'Adult', 'Adventure', 'Animation', 'Biography', 'Comedy',
-                                                                        'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir',
-                                                                        'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 'Romance',
-                                                                        'Sci-Fi', 'Short', 'Sport', 'Thriller', 'War', 'Western', 'numVoteslog']]))
-    
-    # On créé un DataFrame vide, dans lequel on va mettre les films-résultats
-    dffilmproches = pd.DataFrame()
-
-    # Par une boucle "for", dont le cycle dure autant que le nombre de résultats (ici 15),
-    # on ajoute, un par un, les films-résultats ainsi que les infos spécifiées
-    for index in range(0,len(tuplevoisin[0][0])):
-        dffilmproches=dffilmproches.append(filmsanciens2.loc[filmsanciens2.index == (tuplevoisin[1][0][index])].iloc[0], ignore_index=True)
-
-    dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
-
-    #Il faut mettre startYear et numVotes en int sinon ce sont des floats
-    dffilmproches["startYear"]=dffilmproches["startYear"].apply(lambda x: int(x))
-    dffilmproches["numVotes"]=dffilmproches["numVotes"].apply(lambda x: int(x))
-    
-    # la fonction retourne le DataFrame composé des films-résultats
-    return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
+##################################################
+### LA FONCTION AVEC LES FILMS PROCHES NORMAUX ###
+##################################################
 
 def filmsprochesbasique(titredufilm_annee):
     
@@ -166,6 +119,12 @@ def filmsprochesbasique(titredufilm_annee):
     # la fonction retourne le DataFrame composé des films-résultats
     return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
 
+
+####################################
+### LA FONCTION AVEC LES NANARDS ###
+####################################
+
+
 def filmsprochesnanards(titredufilm_annee):
   df_nanards = films.loc[films['averageRating']<3.5]
   titredufilm_annee = ' '.join(titredufilm_annee)
@@ -206,6 +165,12 @@ def filmsprochesnanards(titredufilm_annee):
     # la fonction retourne le DataFrame composé des films-résultats
   return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
 
+
+###############################################
+### LA FONCTION AVEC LES BONS FILMS PROCHES ###
+###############################################
+
+
 def bonsfilmsproches(titredufilm_annee):
 
   df_bestfilm = films.loc[(films['averageRating']>7.5)&(films['numVotes']>50)]
@@ -241,6 +206,11 @@ def bonsfilmsproches(titredufilm_annee):
   dffilmproches["startYear"]=dffilmproches["startYear"].apply(lambda x: int(x))
   dffilmproches["numVotes"]=dffilmproches["numVotes"].apply(lambda x: int(x))
   return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
+
+
+#####################################################
+### LA FONCTION AVEC LES FILMS PROCHES PAS CONNUS ###
+#####################################################
 
 def filmsprochespasconnus(titredufilm_annee):
     
@@ -298,6 +268,12 @@ def filmsprochespasconnus(titredufilm_annee):
     # la fonction retourne le DataFrame composé des films-résultats
     return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
 
+
+##################################################
+### LA FONCTION AVEC LES FILMS PROCHES RECENTS ###
+##################################################
+
+
 def filmsprochesrecents(titredufilm_annee):
     
     # On met le titre du film en minuscules :
@@ -354,6 +330,69 @@ def filmsprochesrecents(titredufilm_annee):
     # la fonction retourne le DataFrame composé des films-résultats
     return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
 
+
+##################################################
+### LA FONCTION AVEC LES FILMS PROCHES ANCIENS ###
+##################################################
+
+
+def filmsprochesanciens(titredufilm_annee):
+    # On met le titre du film en minuscules :
+    filmsanciens = films.loc[films["startYear"]<1980]
+    titredufilm_annee = ' '.join(titredufilm_annee)
+    #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
+
+    filmsanciens2 = pd.concat([filmsanciens,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
+    filmsanciens2.drop_duplicates(subset=["title_year"], inplace=True)
+
+    filmsanciens2.reset_index(inplace=True)
+
+        # On créé la variable X qui contient les critères sur lesquels nous faisons
+        # notre recherche.
+    X = filmsanciens2[['averageRating',
+              'Action', 'Adult', 'Adventure', 'Animation', 'Biography', 'Comedy',
+              'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir',
+              'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 'Romance',
+              'Sci-Fi', 'Short', 'Sport', 'Thriller', 'War', 'Western', 'numVoteslog']]
+
+
+    scaler = StandardScaler().fit(X)
+    X_scaled = scaler.transform(X)
+
+        # On entraîne notre modèle, sur une base de "NearestNeighbors", pour avoir 15
+        # résultats, et on met un poids plus important sur la "distance"
+    distanceKNN = NearestNeighbors(n_neighbors=15).fit(X_scaled)
+
+        # On entre le nom du film recherché (titredufilm) dans notre modèle entraîné.
+        # Le résultat, appelé "tuplevoisin", est un tuple de deux éléments : deux 
+        # array numpys, dont le second contient les index des films-résultats de la
+        # requête
+    tuplevoisin = distanceKNN.kneighbors(scaler.transform(filmsanciens2.loc[filmsanciens2['title_year'] == titredufilm_annee,
+                                                                        ['averageRating',
+                                                                        'Action', 'Adult', 'Adventure', 'Animation', 'Biography', 'Comedy',
+                                                                        'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir',
+                                                                        'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 'Romance',
+                                                                        'Sci-Fi', 'Short', 'Sport', 'Thriller', 'War', 'Western', 'numVoteslog']]))
+    
+    # On créé un DataFrame vide, dans lequel on va mettre les films-résultats
+    dffilmproches = pd.DataFrame()
+
+    # Par une boucle "for", dont le cycle dure autant que le nombre de résultats (ici 15),
+    # on ajoute, un par un, les films-résultats ainsi que les infos spécifiées
+    for index in range(0,len(tuplevoisin[0][0])):
+        dffilmproches=dffilmproches.append(filmsanciens2.loc[filmsanciens2.index == (tuplevoisin[1][0][index])].iloc[0], ignore_index=True)
+
+    dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
+
+    #Il faut mettre startYear et numVotes en int sinon ce sont des floats
+    dffilmproches["startYear"]=dffilmproches["startYear"].apply(lambda x: int(x))
+    dffilmproches["numVotes"]=dffilmproches["numVotes"].apply(lambda x: int(x))
+    
+    # la fonction retourne le DataFrame composé des films-résultats
+    return dffilmproches[["title_year","genres", "averageRating", "numVotes"]]
+
+
+
 def listealeatoire():
   liste = []
   while len(liste) < 3 :
@@ -376,6 +415,11 @@ def listealeatoirePeople(df):
       liste.append(a)
 
 #   return liste
+
+#######################################################
+### LA FONCTION AVEC LES FILMS DE LA REALISATEURICE ###
+#######################################################
+
 
 def filmsreal(titredufilm_annee):
     films['directorsName'] = films['directorsName'].apply(lambda x: eval(x))
@@ -411,6 +455,11 @@ def filmsreal(titredufilm_annee):
     return dffilmproches[["title_year","genres", "averageRating", "numVotes", "directorsName","actorsName"]]
 
 
+#################################################
+### LA FONCTION AVEC LES FILMS DE L'ACTEURICE ###
+#################################################
+
+
 def filmsacteur(titredufilm_annee):
     titredufilm_annee = ' '.join(titredufilm_annee)
     films['actorsName'] = films['actorsName'].apply(lambda x: eval(x))
@@ -444,6 +493,12 @@ def filmsacteur(titredufilm_annee):
 
 
     return dffilmproches[["title_year","genres", "averageRating", "numVotes", "directorsName","actorsName"]]
+
+
+#######################################################
+### LA FONCTION PRINCIPALE QUI CONCATENE LES AUTRES ###
+#######################################################
+
 
 def filmsproches(titredufilm_annee):
     df_creustorza = pd.DataFrame()
@@ -484,13 +539,20 @@ def filmsproches(titredufilm_annee):
 
     return df_creustorza
 
+
+### FONCTION POUR AVOIR LE NOM DE L'ACTEURICE PRINCIPALE EN FONCTION DU TITRE DU FILM
 def nomacteur(titredufilm_annee):
     acteur = films["actorsName"].loc[films["title_year"]==titredufilm_annee[0]].iloc[0][0]
     return acteur
 
+### FONCTION POUR AVOIR LE NOM DU/DE LA REALISATEURICE EN FONCTION DU TITRE DU FILM
 def nomreal(titredufilm_annee):
   return films["directorsName"].loc[films["title_year"]==titredufilm_annee[0]].iloc[0][0]
 
+
+############################
+### LE RENDU DU RESULTAT ###
+############################
 
 if titredufilm_annee:
     with hc.HyLoader('2 secondes, ça mouline...',hc.Loaders.standard_loaders,index=[5]):

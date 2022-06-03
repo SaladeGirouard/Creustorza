@@ -29,11 +29,8 @@ st.set_page_config(
 )
 
 ### Importation de la base de données ###
-# films = pd.read_csv("https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv")
-link = "https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv"
+films = pd.read_csv("https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv")
 
-if 'films' not in st.session_state:
-    st.session_state['films'] = pd.read_csv(link)
 
 ### Le visuel avec le logo et les rideaux ###
 col1, col2, col3 = st.columns((1,3,1))
@@ -41,7 +38,7 @@ with col1:
     st.markdown("""<img class='test' src="https://i.goopics.net/i7av9t.png" alt="Image">""",unsafe_allow_html=True)
 with col2:
     st.image('logo_creustorza.png')
-    titredufilm_annee = st.multiselect('', st.session_state['films']["title_year"])
+    titredufilm_annee = st.multiselect('', films["title_year"])
 with col3:
     st.markdown("""<img src="https://i.goopics.net/lr3ws6.png" alt="Image">""",unsafe_allow_html=True)
 
@@ -49,7 +46,7 @@ with col3:
     
 def tconst_from_film(film_name):
     try: 
-        tc = st.session_state['films'].loc[st.session_state['films']["title_year"] == film_name]["tconst"].values[0]
+        tc = films.loc[films["title_year"] == film_name]["tconst"].values[0]
     except:
         tc = "coucou"
     return tc
@@ -79,7 +76,7 @@ def filmsprochesbasique(titredufilm_annee):
     titredufilm_annee = ' '.join(titredufilm_annee)
         # On créé la variable X qui contient les critères sur lesquels nous faisons
         # notre recherche.
-    X = st.session_state['films'][['startYear','averageRating',
+    X = films[['startYear','averageRating',
               'Action', 'Adult', 'Adventure', 'Animation', 'Biography', 'Comedy',
               'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir',
               'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 'Romance',
@@ -99,7 +96,7 @@ def filmsprochesbasique(titredufilm_annee):
         # array numpys, dont le second contient les index des films-résultats de la
         # requête
     #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
-    tuplevoisin = distanceKNN.kneighbors(scaler.transform(st.session_state['films'].loc[st.session_state['films']['title_year'] == titredufilm_annee,
+    tuplevoisin = distanceKNN.kneighbors(scaler.transform(films.loc[films['title_year'] == titredufilm_annee,
                                                                         ['startYear','averageRating',
                                                                         'Action', 'Adult', 'Adventure', 'Animation', 'Biography', 'Comedy',
                                                                         'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir',
@@ -112,7 +109,7 @@ def filmsprochesbasique(titredufilm_annee):
     # Par une boucle "for", dont le cycle dure autant que le nombre de résultats (ici 15),
     # on ajoute, un par un, les films-résultats ainsi que les infos spécifiées
     for index in range(0,len(tuplevoisin[1][0])):
-        dffilmproches=dffilmproches.append(st.session_state['films'].loc[st.session_state['films'].index == (tuplevoisin[1][0][index])].iloc[0], ignore_index=True)
+        dffilmproches=dffilmproches.append(films.loc[films.index == (tuplevoisin[1][0][index])].iloc[0], ignore_index=True)
 
     dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
 
@@ -130,11 +127,11 @@ def filmsprochesbasique(titredufilm_annee):
 
 
 def filmsprochesnanards(titredufilm_annee):
-  df_nanards = st.session_state['films'].loc[st.session_state['films']['averageRating']<3.5]
+  df_nanards = films.loc[films['averageRating']<3.5]
   titredufilm_annee = ' '.join(titredufilm_annee)
 
 
-  df_nanards2 = pd.concat([df_nanards,st.session_state['films'].loc[st.session_state['films']['title_year'] == titredufilm_annee]], ignore_index=True)
+  df_nanards2 = pd.concat([df_nanards,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
   df_nanards2.drop_duplicates(subset=["title_year"], inplace=True)
 
   df_nanards2.reset_index(inplace=True)
@@ -177,10 +174,10 @@ def filmsprochesnanards(titredufilm_annee):
 
 def bonsfilmsproches(titredufilm_annee):
 
-  df_bestfilm = st.session_state['films'].loc[(st.session_state['films']['averageRating']>7.5)&(st.session_state['films']['numVotes']>50)]
+  df_bestfilm = films.loc[(films['averageRating']>7.5)&(films['numVotes']>50)]
   titredufilm_annee = ' '.join(titredufilm_annee)
   #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
-  df_bestfilm2 = pd.concat([df_bestfilm,st.session_state['films'].loc[st.session_state['films']['title_year'] == titredufilm_annee]], ignore_index=True)
+  df_bestfilm2 = pd.concat([df_bestfilm,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
   df_bestfilm2.drop_duplicates(subset=["title_year"], inplace=True)
 
   df_bestfilm2.reset_index(inplace=True)
@@ -219,11 +216,11 @@ def bonsfilmsproches(titredufilm_annee):
 def filmsprochespasconnus(titredufilm_annee):
     
     # On met le titre du film en minuscules :
-    filmspasconnus = st.session_state['films'].loc[st.session_state['films']["numVotes"]<4000]
+    filmspasconnus = films.loc[films["numVotes"]<4000]
     titredufilm_annee = ' '.join(titredufilm_annee)
     #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
 
-    filmspasconnus2 = pd.concat([filmspasconnus,st.session_state['films'].loc[st.session_state['films']['title_year'] == titredufilm_annee]], ignore_index=True)
+    filmspasconnus2 = pd.concat([filmspasconnus,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
     filmspasconnus2.drop_duplicates(subset=["title_year"], inplace=True)
 
     filmspasconnus2.reset_index(inplace=True)
@@ -281,11 +278,11 @@ def filmsprochespasconnus(titredufilm_annee):
 def filmsprochesrecents(titredufilm_annee):
     
     # On met le titre du film en minuscules :
-    filmsrecents = st.session_state['films'].loc[st.session_state['films']["startYear"]>=2015]
+    filmsrecents = films.loc[films["startYear"]>=2015]
     titredufilm_annee = ' '.join(titredufilm_annee)
 
 
-    filmsrecents2 = pd.concat([filmsrecents,st.session_state['films'].loc[st.session_state['films']['title_year'] == titredufilm_annee]], ignore_index=True)
+    filmsrecents2 = pd.concat([filmsrecents,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
     filmsrecents2.drop_duplicates(subset=["title_year"], inplace=True)
 
     filmsrecents2.reset_index(inplace=True)
@@ -342,11 +339,11 @@ def filmsprochesrecents(titredufilm_annee):
 
 def filmsprochesanciens(titredufilm_annee):
     # On met le titre du film en minuscules :
-    filmsanciens = st.session_state['films'].loc[st.session_state['films']["startYear"]<1980]
+    filmsanciens = films.loc[films["startYear"]<1980]
     titredufilm_annee = ' '.join(titredufilm_annee)
 
 
-    filmsanciens2 = pd.concat([filmsanciens,st.session_state['films'].loc[st.session_state['films']['title_year'] == titredufilm_annee]], ignore_index=True)
+    filmsanciens2 = pd.concat([filmsanciens,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
     filmsanciens2.drop_duplicates(subset=["title_year"], inplace=True)
 
     filmsanciens2.reset_index(inplace=True)
@@ -426,10 +423,10 @@ def listealeatoirePeople(df):
 
 
 def filmsreal(titredufilm_annee):
-    st.session_state['films']['directorsName'] = st.session_state['films']['directorsName'].apply(lambda x: eval(x))
+    films['directorsName'] = films['directorsName'].apply(lambda x: eval(x))
     titredufilm_annee = ' '.join(titredufilm_annee)
-    realisateur = st.session_state['films']["directorsName"].loc[st.session_state['films']["title_year"]==titredufilm_annee].iloc[0][0]
-    dffilmproches = st.session_state['films'].loc[st.session_state['films']['directorsNamestr'].str.contains(realisateur)]
+    realisateur = films["directorsName"].loc[films["title_year"]==titredufilm_annee].iloc[0][0]
+    dffilmproches = films.loc[films['directorsNamestr'].str.contains(realisateur)]
 
     dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
 
@@ -466,9 +463,9 @@ def filmsreal(titredufilm_annee):
 
 def filmsacteur(titredufilm_annee):
     titredufilm_annee = ' '.join(titredufilm_annee)
-    st.session_state['films']['actorsName'] = st.session_state['films']['actorsName'].apply(lambda x: eval(x))
-    acteur = st.session_state['films']["actorsName"].loc[st.session_state['films']["title_year"]==titredufilm_annee].iloc[0][0]
-    dffilmproches = st.session_state['films'].loc[st.session_state['films']['actorsNamestr'].str.contains(acteur)]
+    films['actorsName'] = films['actorsName'].apply(lambda x: eval(x))
+    acteur = films["actorsName"].loc[films["title_year"]==titredufilm_annee].iloc[0][0]
+    dffilmproches = films.loc[films['actorsNamestr'].str.contains(acteur)]
 
     dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
 
@@ -546,12 +543,12 @@ def filmsproches(titredufilm_annee):
 
 ### FONCTION POUR AVOIR LE NOM DE L'ACTEURICE PRINCIPALE EN FONCTION DU TITRE DU FILM
 def nomacteur(titredufilm_annee):
-    acteur = st.session_state['films']["actorsName"].loc[st.session_state['films']["title_year"]==titredufilm_annee[0]].iloc[0][0]
+    acteur = films["actorsName"].loc[films["title_year"]==titredufilm_annee[0]].iloc[0][0]
     return acteur
 
 ### FONCTION POUR AVOIR LE NOM DU/DE LA REALISATEURICE EN FONCTION DU TITRE DU FILM
 def nomreal(titredufilm_annee):
-  return st.session_state['films']["directorsName"].loc[st.session_state['films']["title_year"]==titredufilm_annee[0]].iloc[0][0]
+  return films["directorsName"].loc[films["title_year"]==titredufilm_annee[0]].iloc[0][0]
 
 
 ############################
@@ -560,7 +557,7 @@ def nomreal(titredufilm_annee):
 
 if titredufilm_annee:
     with hc.HyLoader('2 secondes, ça mouline...',hc.Loaders.standard_loaders,index=[5]):
-        time.sleep(10)
+        time.sleep(15)
     st.markdown(
         """
         <style>

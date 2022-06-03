@@ -1,5 +1,3 @@
-from enum import auto
-from turtle import width
 import streamlit as st
 import pandas as pd
 import seaborn as sns

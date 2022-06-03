@@ -427,12 +427,12 @@ def filmsreal(titredufilm_annee):
 
     dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
 
-    if len(dffilmproches.index) > 3:
-        liste3=listealeatoirePeople(dffilmproches)
-        dfacteursaleat = pd.DataFrame()
-        for index in range(0,3):
-            dfacteursaleat = dfacteursaleat.append(dffilmproches.iloc[liste3[index]])
-        dffilmproches = dfacteursaleat
+#     if len(dffilmproches.index) > 3:
+#         liste3=listealeatoirePeople(dffilmproches)
+#         dfacteursaleat = pd.DataFrame()
+#         for index in range(0,3):
+#             dfacteursaleat = dfacteursaleat.append(dffilmproches.iloc[liste3[index]])
+#         dffilmproches = dfacteursaleat
 
 
 
@@ -467,12 +467,12 @@ def filmsacteur(titredufilm_annee):
     dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
 
 
-    if len(dffilmproches.index) > 3:
-        liste3=listealeatoirePeople(dffilmproches)
-        dfacteursaleat = pd.DataFrame()
-        for index in range(0,3):
-            dfacteursaleat = dfacteursaleat.append(dffilmproches.iloc[liste3[index]])
-        dffilmproches = dfacteursaleat
+#     if len(dffilmproches.index) > 3:
+#         liste3=listealeatoirePeople(dffilmproches)
+#         dfacteursaleat = pd.DataFrame()
+#         for index in range(0,3):
+#             dfacteursaleat = dfacteursaleat.append(dffilmproches.iloc[liste3[index]])
+#         dffilmproches = dfacteursaleat
 
 
     vide = pd.Series([Nan,Nan,"Pas d'autre film",Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan,Nan], 
@@ -502,23 +502,23 @@ def filmsproches(titredufilm_annee):
     df_creustorza = pd.DataFrame()
 
     dfbasique = filmsprochesbasique(titredufilm_annee)
-    liste1=listealeatoire()
-    dfbasiquealeatoire = pd.DataFrame()
-    dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[0]])
-    dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[1]])
-    dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[2]])
-    df_creustorza = pd.concat([df_creustorza,dfbasiquealeatoire], ignore_index=True)
+#     liste1=listealeatoire()
+#     dfbasiquealeatoire = pd.DataFrame()
+#     dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[0]])
+#     dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[1]])
+#     dfbasiquealeatoire = dfbasiquealeatoire.append(dfbasique.iloc[liste1[2]])
+    df_creustorza = pd.concat([df_creustorza,dfbasique], ignore_index=True)
 
     dfnanards = filmsprochesnanards(titredufilm_annee).head(3)
     df_creustorza = pd.concat([df_creustorza,dfnanards], ignore_index=True)
 
     dfbonsfilms = bonsfilmsproches(titredufilm_annee)
-    liste2=listealeatoire()
-    dfbonsfilmsaleatoire = pd.DataFrame()
-    dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[0]])
-    dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[1]])
-    dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[2]])
-    df_creustorza = pd.concat([df_creustorza,dfbonsfilmsaleatoire], ignore_index=True)
+#     liste2=listealeatoire()
+#     dfbonsfilmsaleatoire = pd.DataFrame()
+#     dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[0]])
+#     dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[1]])
+#     dfbonsfilmsaleatoire = dfbonsfilmsaleatoire.append(dfbonsfilms.iloc[liste2[2]])
+    df_creustorza = pd.concat([df_creustorza,dfbonsfilms], ignore_index=True)
 
     dfpasconnus = filmsprochespasconnus(titredufilm_annee).head(3)
     df_creustorza = pd.concat([df_creustorza,dfpasconnus], ignore_index=True)

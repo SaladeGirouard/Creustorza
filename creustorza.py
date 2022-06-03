@@ -13,24 +13,25 @@ import numpy as np
 from numpy import nan as Nan
 import math
 
-# def request_api_video(tconst):
-#     url = f"https://api.themoviedb.org/3/movie/{tconst}?api_key=13ccd20d13e4468bc058a421a4c8987c&language=en-US"
-  
-#     r = requests.get(url)
-#     config = r.json()    
-#     prefix = "https://www.youtube.com/watch?v="
-#     try:
-#         trailer = prefix + config['key']
-#     except:
-#         trailer = "/Users/utilisateur/Documents/streamlit/no_image.png"
-#     return trailer
+### CONFIGURATION DE LA PAGE ###
+st.set_page_config(
+     page_title="Creus'Torza",
+     page_icon="🎬",
+     layout="wide",
+     initial_sidebar_state="expanded",
+     menu_items={
+        'Get Help':  None,
+         'Report a bug': None,
+         'About': "# Bienvenue ! # \n"
+         "Anna Munos, Robin Sainsot, Manoa Brugger, Stéphane Provost et Charles Girouard, étudiant.es à la Wild Code School de Nantes vous propose un moteur de recommendation de film d'un nouveau genre ! Tout droit inspiré du mythique Katorza à Nantes et de ses mythques absurdes séances, l'algorithme vous recommanderas des films similaires à votre film favoris décliné sous différentes catégories: version nanard, recent, connus..."
+         "Nous vous laissons découvrir tout cela ! \n"
 
 ### Importation de la base de données ###
 films = pd.read_csv("https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv")
 
 
 ### Le visuel avec le logo et les rideaux ###
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns((1,3,1))
 with col1:
     st.markdown("""<img class='test' src="https://i.goopics.net/i7av9t.png" alt="Image">""",unsafe_allow_html=True)
 with col2:
@@ -126,7 +127,7 @@ def filmsprochesbasique(titredufilm_annee):
 def filmsprochesnanards(titredufilm_annee):
   df_nanards = films.loc[films['averageRating']<3.5]
   titredufilm_annee = ' '.join(titredufilm_annee)
-  #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
+
 
   df_nanards2 = pd.concat([df_nanards,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
   df_nanards2.drop_duplicates(subset=["title_year"], inplace=True)
@@ -277,7 +278,7 @@ def filmsprochesrecents(titredufilm_annee):
     # On met le titre du film en minuscules :
     filmsrecents = films.loc[films["startYear"]>=2015]
     titredufilm_annee = ' '.join(titredufilm_annee)
-    #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
+
 
     filmsrecents2 = pd.concat([filmsrecents,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
     filmsrecents2.drop_duplicates(subset=["title_year"], inplace=True)
@@ -338,7 +339,7 @@ def filmsprochesanciens(titredufilm_annee):
     # On met le titre du film en minuscules :
     filmsanciens = films.loc[films["startYear"]<1980]
     titredufilm_annee = ' '.join(titredufilm_annee)
-    #films['title_year'] = films['title_year'].apply(lambda x: x.lower())
+
 
     filmsanciens2 = pd.concat([filmsanciens,films.loc[films['title_year'] == titredufilm_annee]], ignore_index=True)
     filmsanciens2.drop_duplicates(subset=["title_year"], inplace=True)
@@ -574,7 +575,6 @@ if titredufilm_annee:
     result_film["tconst"] = result_film["title_year"].apply(tconst_from_film)
     name_film = result_film["title_year"].to_list()
     url_img = result_film["tconst"].apply(request_api).to_list()
-#     url_video = result_film["tconst"].apply(request_api_video).to_list()
     acteur = nomacteur(titredufilm_annee)
     real =  nomreal(titredufilm_annee)
     col1, col2, col3 = st.columns(3)

@@ -33,7 +33,7 @@ st.set_page_config(
 link = "https://raw.githubusercontent.com/robin0744/projet2/main/filmsv2_2.csv"
 
 if 'films' not in st.session_state:
-    st.session_state['films'] = pd.read_csv(link,compression={'method': 'zip'})
+    st.session_state['films'] = pd.read_csv(link)
 
 ### Le visuel avec le logo et les rideaux ###
 col1, col2, col3 = st.columns((1,3,1))

@@ -16,14 +16,14 @@ import math
 ### CONFIGURATION DE LA PAGE ###
 st.set_page_config(
      page_title="Creus'Torza",
-     page_icon="🎬",
+     page_icon="🎞",
      layout="wide",
      initial_sidebar_state="expanded",
      menu_items={
         'Get Help':  None,
          'Report a bug': None,
          'About': "# Bienvenue ! # \n"
-         "Anna Munos, Robin Sainsot, Manoa Brugger, Stéphane Provost et Charles Girouard, étudiant.es à la Wild Code School de Nantes vous propose un moteur de recommendation de film d'un nouveau genre ! Tout droit inspiré du mythique Katorza à Nantes et de ses mythques absurdes séances, l'algorithme vous recommanderas des films similaires à votre film favoris décliné sous différentes catégories: version nanard, recent, connus..."
+         "Anna Munos, Robin Sainsot, Manoa Brugger, Stéphane Provost et Charles Girouard, étudiant.es à la Wild Code School de Nantes vous propose un moteur de recommandation de film d'un nouveau genre ! Tout droit inspiré du mythique Katorza à Nantes et de ses mythques absurdes séances, l'algorithme vous recommandera des films similaires à votre film favori décliné sous différentes catégories: version nanard, recent, connu...\n"
          "Nous vous laissons découvrir tout cela ! \n"
      }
 )
@@ -661,7 +661,7 @@ if titredufilm_annee:
     with col3:
         st.image(url_img[17], width= 270, use_column_width= 'always')
         st.markdown(f'**{name_film[17]}**')
-    st.markdown(f"<p class='big-font'>D'autres films de {acteur}</p>" , unsafe_allow_html=True)
+    st.markdown(f"<p class='big-font'>D'autres films avec {acteur}</p>" , unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
     with col1:
         st.image(url_img[18], width= 270, use_column_width= 'always')

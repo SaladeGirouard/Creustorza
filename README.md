@@ -16,6 +16,8 @@ https://datasets.imdbws.com
 
 But we did some modifications : we only kept the movies which were released in France, we deleted some genre such as "TV-Reality", "Adult", or "News", and we deleted the movies that had missing datas.
 
+The final dataset we used :
+https://raw.githubusercontent.com/SaladeGirouard/Creustorza/main/films.csv
 
 ### Deployment
 

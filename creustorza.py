@@ -49,13 +49,18 @@ def tconst_from_film(film_name):
     return tc
 
 def request_api(tconst):
-    url = f"https://api.themoviedb.org/3/movie/{tconst}?api_key=13ccd20d13e4468bc058a421a4c8987c&language=en-US"
+    url = f"https://api.themoviedb.org/3/movie/{tconst}?api_key=0a6587955ad02692ab58a2f2cabc60c5&language=en-US"
     r = requests.get(url)
+    if r.status_code != 200:
+        print(f"Erreur API TMDb : {r.status_code}")
+        return "pas_dimage.png"
     config = r.json()
     prefix = "https://image.tmdb.org/t/p/original"
     try:
         img = prefix + config['backdrop_path']
-    except:
+        print(f"URL de l'image : {img}")  # Affiche l'URL pour vérification
+    except KeyError:
+        print("backdrop_path non trouvé dans la réponse API")
         img = "pas_dimage.png"
     return img
 

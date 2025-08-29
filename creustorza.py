@@ -155,13 +155,10 @@ def filmsprochesnanards(titredufilm_annee):
   dffilmproches = pd.DataFrame()
     # Par une boucle "for", dont le cycle dure autant que le nombre de résultats (ici 15),
     # on ajoute, un par un, les films-résultats ainsi que les infos spécifiées
- for index in range(0, len(tuplevoisin[1][0])):
-    new_row = df_nanards2.loc[df_nanards2.index == (tuplevoisin[1][0][index])].iloc[0]
-    dffilmproches = pd.concat(
-        [dffilmproches, pd.DataFrame([new_row])],
-        ignore_index=True
-    ) 
-#Il faut mettre startYear et numVotes en int sinon ce sont des floats
+  for index in range(0, len(tuplevoisin[1][0])):
+       new_row = df_nanards2.loc[df_nanards2.index == (tuplevoisin[1][0][index])].iloc[0]
+       dffilmproches = pd.concat([dffilmproches, pd.DataFrame([new_row])], ignore_index=True) 
+  #Il faut mettre startYear et numVotes en int sinon ce sont des floats
   
   dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
 
@@ -204,11 +201,8 @@ def bonsfilmsproches(titredufilm_annee):
     # Par une boucle "for", dont le cycle dure autant que le nombre de résultats (ici 15),
     # on ajoute, un par un, les films-résultats ainsi que les infos spécifiées
   for index in range(0, len(tuplevoisin[1][0])):
-    new_row = dffilmproches.loc[dffilmproches.index == (tuplevoisin[1][0][index])].iloc[0]
-    dffilmproches = pd.concat(
-        [dffilmproches, pd.DataFrame([new_row])],
-        ignore_index=True
-    )
+       new_row = dffilmproches.loc[dffilmproches.index == (tuplevoisin[1][0][index])].iloc[0]
+       dffilmproches = pd.concat([dffilmproches, pd.DataFrame([new_row])], ignore_index=True)
 
 
   dffilmproches.drop(dffilmproches.loc[dffilmproches['title_year'] == titredufilm_annee].index, inplace =True)
